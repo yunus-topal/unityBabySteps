@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,11 +20,7 @@ public class GameManager : MonoBehaviour
     //buttons
     public Button optionA;
     public Button optionB;
-
-    public Button pauseButton;
-
-
-
+    
     public void startingButton()
     {
         startText.enabled = false;
@@ -31,6 +28,8 @@ public class GameManager : MonoBehaviour
         optionB.gameObject.SetActive(true);
 
         timerStarter = true;
+        timeLeft = 10f;
+        Time.timeScale = 1f;
     }
     // Update is called once per frame
     //timer needs update every frame.
@@ -81,23 +80,25 @@ public class GameManager : MonoBehaviour
     {
         int total = int.Parse(score.text);
 
-        for (int i = 1; i <= 10; i++)
+        if (total > 0)
         {
-            if (PlayerPrefs.GetInt(i + ".Score") == -1)
+            for (int i = 1; i <= 10; i++)
             {
-                PlayerPrefs.SetInt(i + ".Score", total);
-                break;
-            }
-            else if (PlayerPrefs.GetInt(i + ".Score") < total)
-            {
-                int changes = PlayerPrefs.GetInt(i + ".Score");
-                PlayerPrefs.SetInt(i + ".Score", total);
-                total = changes;
-                break;
+                if (PlayerPrefs.GetInt(i + ".Score") == -1)
+                {
+                    PlayerPrefs.SetInt(i + ".Score", total);
+                    break;
+                }
+                else if (PlayerPrefs.GetInt(i + ".Score") < total)
+                {
+                    int changes = PlayerPrefs.GetInt(i + ".Score");
+                    PlayerPrefs.SetInt(i + ".Score", total);
+                    total = changes;
+                    break;
+                }
             }
         }
-
-
+        
         startText.text = "Game Over";
         startText.GetComponent<Text>().fontSize = 45;
         startText.enabled = true;
